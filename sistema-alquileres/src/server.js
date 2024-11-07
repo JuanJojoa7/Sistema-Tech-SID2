@@ -20,3 +20,20 @@ app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
 
+// src/server.js
+const express = require('express');
+const { sequelize } = require('./models'); // Importa la conexión y modelos desde index.js
+
+sequelize.sync({ alter: true })
+  .then(() => {
+    console.log('Conectado y sincronizado con la base de datos de PostgreSQL');
+  })
+  .catch((err) => {
+    console.error('Error al sincronizar con la base de datos:', err);
+  });
+
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
+});
+
+
