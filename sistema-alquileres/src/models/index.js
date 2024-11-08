@@ -1,10 +1,23 @@
-// /models/index.js
+// Cargar las variables de entorno desde el archivo .env
+require('dotenv').config();
+
 const Sequelize = require('sequelize');
-const config = require('../config/config.json');
 
-// Inicializa Sequelize con la configuración de desarrollo
-const sequelize = new Sequelize(config.development);
+// Inicializa Sequelize con las variables de entorno
+const sequelize = new Sequelize({
+  username: process.env.PG_USER,
+  password: process.env.PG_PASSWORD,
+  database: process.env.PG_DATABASE,
+  host: process.env.PG_HOST,
+  port: process.env.PG_PORT,
+  dialect: 'postgres',
+  ssl: process.env.PG_SSL === 'true',  // Asegurando que el valor booleano sea correcto
+  dialectOptions: {
+    ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: false } : null
+  }
+});
 
+// Importa los modelos
 const models = {
   Company: require('./Company')(sequelize, Sequelize.DataTypes),
   Shop: require('./Shop')(sequelize, Sequelize.DataTypes),
@@ -22,6 +35,15 @@ const models = {
   Category: require('./Category')(sequelize, Sequelize.DataTypes),
 };
 
+// Sincroniza los modelos con la base de datos (esto crea las tablas si no existen)
+sequelize.sync({ force: false }) // force: false no elimina las tablas existentes
+  .then(() => {
+    console.log('Tablas sincronizadas correctamente');
+  })
+  .catch((error) => {
+    console.error('Error al sincronizar tablas:', error);
+  });
+
 // Define las asociaciones entre los modelos
 Object.keys(models).forEach((modelName) => {
   if (models[modelName].associate) {
@@ -29,6 +51,7 @@ Object.keys(models).forEach((modelName) => {
   }
 });
 
+// Exporta los modelos y la conexión de Sequelize
 models.sequelize = sequelize;
 models.Sequelize = Sequelize;
 

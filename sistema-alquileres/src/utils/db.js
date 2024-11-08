@@ -9,15 +9,28 @@ const pgClient = new Client({
   password: process.env.PG_PASSWORD,
   port: process.env.PG_PORT,
   ssl: { rejectUnauthorized: false } // Agrega SSL para conexiones seguras
-});  
+});
 
-pgClient.connect().then(() => console.log('Conectado a PostgreSQL'));
+pgClient.connect()
+  .then(() => {
+    console.log('Conectado a PostgreSQL');
+  })
+  .catch(err => {
+    console.error('Error al conectar a PostgreSQL:', err);
+    process.exit(1);  // Sale del proceso si hay un error crítico
+  });
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-}).then(() => console.log('Conectado a MongoDB'))
-  .catch(err => console.log('Error al conectar a MongoDB:', err));
+})
+  .then(() => {
+    console.log('Conectado a MongoDB');
+  })
+  .catch(err => {
+    console.error('Error al conectar a MongoDB:', err);
+    process.exit(1);  // Sale del proceso si hay un error crítico
+  });
 
 module.exports = { pgClient, mongoose };
