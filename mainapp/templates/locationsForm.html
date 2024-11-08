@@ -1,0 +1,28 @@
+{% extends "root.html" %}
+{% block title %}Formulario de Lugar del Evento{% endblock title %}
+{% load static %}
+
+{% block static %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/lugar.css' %}">
+{% endblock %}
+
+{% block actual_patch %}
+    <h2>Registrar lugar para Eventos</h2>
+{% endblock actual_patch %}
+
+{% block breadcrumb-items %} 
+    <li class="breadcrumb-item">
+        <a href="">Registrar Lugar para Eventos</a>
+    </li>
+{% endblock breadcrumb-items %}
+
+{% block content %}
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+</div>
+{% endblock %}

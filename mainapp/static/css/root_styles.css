@@ -1,0 +1,277 @@
+:root {
+  --color1: #FFFFFF;
+  --color2: #00589B;
+  --color3: #0F4176;
+  --color4: #0F284C;
+  --color5: #2c3338;
+  --transition-speed: .5s;
+}
+
+* {
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  color: black;
+  background-color: var(--color1);
+  margin: 0;
+  padding: 0;
+}
+
+body::-webkit-scrollbar {
+  width: 0.25rem;
+}
+
+body::-webkit-scrollbar-track {
+  background: #1e1e24;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #6649b8;
+}
+
+main {
+  margin-left: 5rem;
+}
+
+.sidebar {
+  position: fixed;
+  background-color: var(--color3);
+  transition: width 600ms ease;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.nav-item {
+  width: 100%;
+}
+
+.nav-item:last-child {
+  margin-top: auto;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  height: 5rem;
+  color: var(--color1);
+  text-decoration: none;
+  transition: var(--transition-speed);
+  background-color: var(--color3);
+}
+
+.nav-link-logo {
+  display: flex;
+  align-items: center;
+  height: 5rem;
+  color: var(--color1);
+  text-decoration: none;
+  transition: var(--transition-speed);
+  background-color: var(--color2);
+}
+
+.nav-link:hover {
+  filter: grayscale(0%) opacity(1);
+  background: var(--color4);
+  color: var(--color1);
+}
+
+.nav-link-logo:hover {
+  filter: grayscale(0%) opacity(1);
+  background: var(--color4);
+}
+
+.link-text {
+  display: none;
+  margin-left: 1rem;
+}
+
+.nav-link svg, .nav-link-logo svg{
+  width: 2rem;
+  min-width: 2rem;
+  margin: 0 1.5rem;
+}
+
+.fa-primary {
+  color: var(--color1);
+}
+
+.fa-secondary {
+  color: var(--color1);
+}
+
+.fa-primary,
+.fa-secondary {
+  transition: var(--transition-speed);
+}
+
+.logo {
+  font-weight: bold;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.5rem;
+  letter-spacing: 0.3ch;
+  width: 100%;
+}
+
+.logo svg {
+  transform: rotate(0deg);
+  transition: var(--transition-speed);
+}
+
+.logo-text {
+  display: inline;
+  position: absolute;
+  left: -999px;
+  transition: var(--transition-speed);
+}
+
+.sidebar:hover .logo svg {
+  transform: rotate(-180deg);
+}
+
+/* Small screens */
+@media only screen and (max-width: 600px) {
+  .sidebar {
+      bottom: 0;
+      width: 100vw;
+      height: 5rem;
+  }
+
+  .logo {
+      display: none;
+  }
+
+  .sidebar-nav {
+      flex-direction: row;
+  }
+
+  .nav-link {
+      justify-content: center;
+  }
+
+  .nav-link-logo {
+    justify-content: center;
+}
+
+  main {
+      margin: 0;
+  }
+}
+
+/* Large screens */
+@media only screen and (min-width: 600px) {
+  .sidebar {
+      top: 0;
+      width: 5rem;
+      height: 100vh;
+  }
+
+  .sidebar:hover {
+      width: 16rem;
+  }
+
+  .sidebar:hover .link-text {
+      display: inline;
+  }
+
+  .sidebar:hover .logo svg {
+      margin-left: 11rem;
+  }
+
+  .sidebar:hover .logo-text {
+      left: 0px;
+  }
+}
+
+.theme-icon {
+  display: none;
+}
+
+.dark #darkIcon {
+  display: block;
+}
+
+.light #lightIcon {
+  display: block;
+}
+
+.solar #solarIcon {
+  display: block;
+}
+
+/*AQUÍ TERMINA LA CONFIG DEL NAVBAR*/
+
+#page-header {
+  color: black;
+}
+
+.header-content {
+  margin-left: 5rem;
+  height: 5rem;
+  border-bottom: 2px solid rgba(0, 0, 0, .1);
+  padding-left: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-content h2 {
+  margin: 0;
+}
+
+.header-content .navigation-bar {
+  margin-top: .9rem;
+}
+
+.breadcrumb {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.breadcrumb-item a{
+  text-decoration: none;
+  color: #000000;
+}
+
+.breadcrumb-item a:hover{
+  text-decoration: underline;
+  transition: 0.3s;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 .5rem 0 .5rem;
+  color: #626262;
+  content: "-";
+}
+
+.header-content h2 {
+  margin-top:5px;
+  font-weight: 700;
+}
+
+
+
+
+/*cambiar
+.navigation-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #0094C6;
+  padding: 1rem;
+}
+*/

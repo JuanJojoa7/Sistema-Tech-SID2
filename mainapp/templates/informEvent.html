@@ -1,0 +1,163 @@
+{% extends "root.html" %}
+{% block title %}Información del evento{% endblock title %}
+{% load static %}
+
+{% block static %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'CSS/eventInformStyle.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
+{% block actual_patch %}
+    <h2>Información del evento</h2>
+{% endblock actual_patch %}
+
+{% block breadcrumb-items %} 
+    <li class="breadcrumb-item">
+        <a href="">Información del evento</a>
+    </li>
+{% endblock breadcrumb-items %}
+
+{% block content %}
+<div class="generalContent">
+    <div class="titleContent">
+        <h2>{{ titulo }}</h2>
+        <h3>{{ lugar }}</h3>
+        <button onclick="addSpeaker()"><i class="fas fa-pencil-alt"></i></button>
+        <p class="categorias">{{ categorias | join:", " }}</p>
+        <p class="fecha">{{ fecha }}</p>
+        
+    </div>
+
+    <div class="descriptrionContent">
+        <h2>Descripción</h2>
+        <p>{{ descripcion }}</p>
+    </div>
+
+    <div class="organizersContent">
+        <h2>Organizadores</h2>
+        <input type="text" id="program-searchInput" list="programs-list">
+            <datalist id="programs-list">
+                {% for programa in programas %}
+                <option value="{{programa.programa}}" data-program-id="{{programa.id}}">
+                {% endfor %}
+            </datalist>
+        <button id="addOrganizer"><i class="fas fa-pencil-alt"></i></button>
+        {% for programa in programas_evento %}
+        <li>
+            <strong>Nombre:</strong> {{ programa.nombre}}<br>
+        </li>
+        {% endfor %}
+    </div>
+
+    <div class="speakersContent">
+        <h2>Conferencistas</h2>
+         <input type="text" id="speaker-searchInput" list="speakers-list">
+            <datalist id="speakers-list">
+                {% for user in users %}
+                <option value="{{user.completedName}}" data-user-id="{{user.id}}">
+                {% endfor %}
+            </datalist>
+        <button id="addSpeaker"><i class="fas fa-pencil-alt"></i></button>
+        {% for conferencista in conferencistas %}
+        <li>
+            <strong>Nombre:</strong> {{ conferencista.nombreCompleto }}<br>
+            <strong>Relación:</strong> {{ conferencista.relacion }}<br>
+        </li>
+        {% endfor %}
+    </div>
+
+    <div class="assistantsContent">
+        <h2>Asistentes</h2>
+        <input type="text" id="searchInput" list="users-list">
+        <datalist id="users-list">
+            {% for user in users %}
+            <option value="{{ user.completedName }}" data-user-id="{{ user.id }}">       
+            {% endfor %}
+        </datalist>
+        <button id="addAssistant"><i class="fas fa-pencil-alt"></i></button>
+        {% for asistente in asistentes %}
+        <li>
+            <strong>Nombre:</strong> {{ asistente.nombreCompleto }}<br>
+            <strong>Relación:</strong> {{ asistente.relacion }}<br>
+        </li>
+        {% endfor %}
+    </div>
+
+    <div class="commentsContent">
+        <h2>Comentarios</h2>
+        <a href="{% url 'añadir_comentario' event_id=event_id %}"><i class="fas fa-pencil-alt"></i></a>
+        {% for comentario in comentarios %}
+        <li>
+            <strong>Comentario:</strong> {{ comentario.text }}<br>
+        </li>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.getElementById("addAssistant").addEventListener("click", function() {
+        const urlActual = window.location.pathname;
+        // Ahora puedes usar la variable `urlActual` para construir la nueva URL.
+        // Por ejemplo:
+        const idEvento = urlActual.split('/')[2]; // Reemplaza con el ID real del evento
+        const nombreUsuario = document.getElementById("searchInput").value;
+        const opcionSeleccionada = document.querySelector(`#users-list option[value="${nombreUsuario}"]`);
+        console.log(opcionSeleccionada);
+        // Obtén el ID del usuario desde el atributo data-user-id
+        const idUsuario = opcionSeleccionada.getAttribute("data-user-id");
+
+        // Construye la nueva URL con el ID del usuario
+        const nuevaUrl = `${window.location.origin}/anadir_asistente/${idEvento}/${idUsuario}`;
+        console.log(nuevaUrl);
+        // Redirige a la nueva URL
+        window.location.replace(nuevaUrl);
+    });
+
+    document.getElementById("addSpeaker").addEventListener("click", function() {
+        const urlActual = window.location.pathname;
+        // Ahora puedes usar la variable `urlActual` para construir la nueva URL.
+        // Por ejemplo:
+        const idEvento = urlActual.split('/')[2]; // Reemplaza con el ID real del evento
+        const nombreUsuario = document.getElementById("speaker-searchInput").value;
+        console.log(nombreUsuario);
+        const opcionSeleccionada = document.querySelector(`#speakers-list option[value="${nombreUsuario}"]`);
+        console.log(opcionSeleccionada);
+        // Obtén el ID del usuario desde el atributo data-user-id
+        const idUsuario = opcionSeleccionada.getAttribute("data-user-id");
+
+        // Construye la nueva URL con el ID del usuario
+        const nuevaUrl = `${window.location.origin}/anadir_conferencista/${idEvento}/${idUsuario}`;
+        // Redirige a la nueva URL
+        window.location.replace(nuevaUrl);
+    });
+
+    document.getElementById("addOrganizer").addEventListener("click", function() {
+        const urlActual = window.location.pathname;
+        // Ahora puedes usar la variable `urlActual` para construir la nueva URL.
+        // Por ejemplo:
+        const idEvento = urlActual.split('/')[2]; // Reemplaza con el ID real del evento
+        const nombrePrograma = document.getElementById("program-searchInput").value;
+        console.log(nombrePrograma);
+        const opcionSeleccionada = document.querySelector(`#programs-list option[value="${nombrePrograma}"]`);
+        console.log(opcionSeleccionada);
+        // Obtén el ID del usuario desde el atributo data-user-id
+        const idUsuario = opcionSeleccionada.getAttribute("data-program-id");
+
+        // Construye la nueva URL con el ID del usuario
+        const nuevaUrl = `${window.location.origin}/anadir_conferencista/${idEvento}/${idUsuario}`;
+        // Redirige a la nueva URL
+        window.location.replace(nuevaUrl);
+    });
+
+    function addAssistant() {
+        // Lógica para agregar un asistente
+        alert('Agregar Asistente');
+    }
+
+    function addComment() {
+        // Lógica para agregar un comentario
+        alert('Agregar Comentario');
+    }
+</script>
+{% endblock %}

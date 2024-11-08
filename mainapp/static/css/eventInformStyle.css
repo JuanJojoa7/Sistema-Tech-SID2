@@ -1,0 +1,125 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5; 
+}
+
+.generalContent {
+  max-width: 800px; 
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff; 
+  border-radius: 10px; 
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+}
+
+.fechaClass{
+  margin-top: 17px;
+}
+
+.descriptrionContent h2,
+.organizersContent h2,
+.speakersContent h2,
+.assistantsContent h2,
+.commentsContent h2,
+.titleContent h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding: 0;
+}
+
+.titleContent {
+  margin-bottom: 20px;
+  padding: 20px;
+  position: relative;
+}
+
+.titleContent h2 {
+  color: #333; 
+}
+
+.titleContent button {
+  background-color: #007bff; 
+  color: #fff; 
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.titleContent button:hover {
+  background-color: #0056b3; 
+}
+
+.titleContent p {
+  color: #666; 
+  font-size: 14px;
+}
+
+.titleContent p.categorias {
+  margin-bottom: 10px; /* Añade un margen inferior a las categorías */
+}
+
+.titleContent p.fecha {
+  margin-top: 10px; /* Añade un margen superior a la fecha */
+}
+
+.descriptrionContent,
+.organizersContent,
+.speakersContent,
+.assistantsContent,
+.commentsContent {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #f9f9f9; 
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+  position: relative;
+}
+
+.descriptrionContent h2,
+.organizersContent h2,
+.speakersContent h2,
+.assistantsContent h2,
+.commentsContent h2 {
+  color: #333;
+}
+
+.descriptrionContent p,
+.organizersContent p,
+.speakersContent p,
+.assistantsContent p,
+.commentsContent p {
+  color: #666;
+}
+
+.descriptrionContent button,
+.organizersContent button,
+.speakersContent button,
+.assistantsContent button,
+.commentsContent a {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #28a745; /* Verde */
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.descriptrionContent button:hover,
+.organizersContent button:hover,
+.speakersContent button:hover,
+.assistantsContent button:hover,
+.commentsContent button:hover {
+  background-color: #218838; /* Verde más oscuro al pasar el ratón */
+}

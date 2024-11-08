@@ -1,0 +1,43 @@
+{% extends "root.html" %}
+{% block title %}Eventos{% endblock title %}
+{% load static %}
+
+{% block static %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/eventosListStyle.css' %}">
+{% endblock %}
+
+{% block actual_patch %}
+    <h2>Eventos</h2>
+{% endblock actual_patch %}
+
+{% block breadcrumb-items %} 
+    <li class="breadcrumb-item">
+        <a href="">Eventos</a>
+    </li>
+{% endblock breadcrumb-items %}
+
+{% block content %}
+<div class="container">
+    <div class="wrapperEvent">
+        {% for evento in eventos %}
+            <a href="{% url 'evento_detalles' evento.id %}" class="event-link">
+                <div id="button{{ evento.id }}" type="button" class="event">
+                    <div class="subcontainer1">
+                        <div class="subcontainer2">
+                            <div class="left">
+                                <h3>{{ evento.title }}</h3>
+                                <p>{{ evento.description }}</p>
+                            </div>
+                            <div class="right">
+                                <h2>✅</h2>
+                                <p>{{ evento.date }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
