@@ -49,7 +49,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rental.wsgi.application'
 
-# Configuración para PostgreSQL
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -59,7 +58,7 @@ DATABASES = {
         'HOST': os.getenv('PG_HOST', 'database-1.cheas0yomvae.us-east-2.rds.amazonaws.com'),
         'PORT': os.getenv('PG_PORT', '5432'),
         'OPTIONS': {
-            'sslmode': 'require' if os.getenv('PG_SSL', 'false') == 'true' else 'disable'
+            'sslmode': 'require',  # Requiere SSL
         },
     }
 }

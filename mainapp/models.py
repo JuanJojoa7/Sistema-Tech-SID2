@@ -125,132 +125,132 @@ class ContractStatus(models.Model):
 """---------------------Modelos de Mongo-------------------"""
 
 
-class User(Document):
-    """
-    Modelo para representar los usuarios
+# class User(Document):
+#     """
+#     Modelo para representar los usuarios
 
-    Atributos:
-        username (CharField): Nombre de usuario.
-        fullName (CharField): Nombre descriptivo del usuario.
-        relationship (CharField): relación del usuario.
-        email (CharField): correo electronico del usuario.
-        city (CharField): ciudad del usuario.
-    """
+#     Atributos:
+#         username (CharField): Nombre de usuario.
+#         fullName (CharField): Nombre descriptivo del usuario.
+#         relationship (CharField): relación del usuario.
+#         email (CharField): correo electronico del usuario.
+#         city (CharField): ciudad del usuario.
+#     """
 
-    username = StringField(
-        max_length=120
-    )
+#     username = StringField(
+#         max_length=120
+#     )
 
-    fullName = StringField(
-        max_length=240
-    )
+#     fullName = StringField(
+#         max_length=240
+#     )
 
-    relationship = StringField(
-        max_length=120
-    )
+#     relationship = StringField(
+#         max_length=120
+#     )
 
-    email = EmailField(
-        max_length=120
-    )
+#     email = EmailField(
+#         max_length=120
+#     )
 
-    city_id = StringField(
+#     city_id = StringField(
 
-    )
+#     )
 
-    def get_city(self):
-        city = City.objects.get(id=self.city_id)
-        return city
-
-
-class Comment(Document):
-    """
-    Modelo para representar los comentarios.
-
-    Atributos:
-        text (CharField): Texto del comentario.
-        userId (IntegerField): Identificador del usuario al cual pertenece el comentario.
-    """
-    text = StringField(
-        required=True
-    )
-
-    userId = ReferenceField(
-        User,
-        reverse_delete_rule=mongoengine.CASCADE
-    )
+#     def get_city(self):
+#         city = City.objects.get(id=self.city_id)
+#         return city
 
 
-class Category(Document):
-    """
-    Modelo para representar las categorías.
+# class Comment(Document):
+#     """
+#     Modelo para representar los comentarios.
 
-    Atributos:
-        name (StringField): Nombre de la categoría.
-    """
-    name = StringField(
-        max_length=120
-    )
+#     Atributos:
+#         text (CharField): Texto del comentario.
+#         userId (IntegerField): Identificador del usuario al cual pertenece el comentario.
+#     """
+#     text = StringField(
+#         required=True
+#     )
 
-
-class Faculty(Document):
-    """
-    Modelo para representar las facultades.
-
-    Atributos:
-        name (CharField): Nombre descriptivo de la facultad.
-    """
-    name = StringField(max_length=255)
+#     userId = ReferenceField(
+#         User,
+#         reverse_delete_rule=mongoengine.CASCADE
+#     )
 
 
-class Event(Document):
-    """
-    Modelo para representar los eventos
+# class Category(Document):
+#     """
+#     Modelo para representar las categorías.
 
-    Atributos:
-        title (CharField): titulo descriptivo del evento.
-        description (CharField): descripción del evento.
-        categories (CharField): categorias del evento.
-        date (CharField): fecha de realización del evento.
-        location (CharField): ubicación del evento.
-    """
-    title = StringField(
-        max_length=255
-    )
-
-    description = StringField(
-        max_length=512
-    )
-
-    categories = ListField(ReferenceField
-                           (Category,
-                            reverse_delete_rule=NULLIFY)
-                           )
-
-    date = DateTimeField(
-
-    )
-
-    location_id = StringField()
-
-    def get_location(self):
-        # Realiza una consulta a la base de datos de Oracle para obtener la ubicación
-        location = Location.objects.get(id=self.location_id)
-        return location
+#     Atributos:
+#         name (StringField): Nombre de la categoría.
+#     """
+#     name = StringField(
+#         max_length=120
+#     )
 
 
-class Program(Document):
-    """
-    Modelo para representar los programas académicos.
+# class Faculty(Document):
+#     """
+#     Modelo para representar las facultades.
 
-    Atributos:
-        name (CharField): Nombre descriptivo del programa.
-        facultyId (IntegerField): Identificador único de la facultad a la que pertenece.
-    """
-    name = StringField(
-        max_length=255
-    )
+#     Atributos:
+#         name (CharField): Nombre descriptivo de la facultad.
+#     """
+#     name = StringField(max_length=255)
 
-    facultyId = ReferenceField(
-        Faculty,
-        reverse_delete_rule=mongoengine.CASCADE
-    )
+
+# class Event(Document):
+#     """
+#     Modelo para representar los eventos
+
+#     Atributos:
+#         title (CharField): titulo descriptivo del evento.
+#         description (CharField): descripción del evento.
+#         categories (CharField): categorias del evento.
+#         date (CharField): fecha de realización del evento.
+#         location (CharField): ubicación del evento.
+#     """
+#     title = StringField(
+#         max_length=255
+#     )
+
+#     description = StringField(
+#         max_length=512
+#     )
+
+#     categories = ListField(ReferenceField
+#                            (Category,
+#                             reverse_delete_rule=NULLIFY)
+#                            )
+
+#     date = DateTimeField(
+
+#     )
+
+#     location_id = StringField()
+
+#     def get_location(self):
+#         # Realiza una consulta a la base de datos de Oracle para obtener la ubicación
+#         location = Location.objects.get(id=self.location_id)
+#         return location
+
+
+# class Program(Document):
+#     """
+#     Modelo para representar los programas académicos.
+
+#     Atributos:
+#         name (CharField): Nombre descriptivo del programa.
+#         facultyId (IntegerField): Identificador único de la facultad a la que pertenece.
+#     """
+#     name = StringField(
+#         max_length=255
+#     )
+
+#     facultyId = ReferenceField(
+#         Faculty,
+#         reverse_delete_rule=mongoengine.CASCADE
+#     )
