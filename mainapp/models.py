@@ -2,270 +2,124 @@ from django.db import models
 import mongoengine
 from mongoengine import *
 
-""""------------------------Modelos de Oracle-------------------------------------------"""
+""""------------------------Modelos de POSTGRESQL-------------------------------------------"""
+
+# Tabla para representar la entidad Company
+class Company(models.Model):
+    company_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
+# Tabla para representar la entidad Shop
+class Shop(models.Model):
+    shop_id = models.AutoField(primary_key=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+# Tabla para representar la entidad City y Country
 class Country(models.Model):
-    """
-    Modelo para representar los países.
-
-    Atributos:
-        id (AutoField): Identificador único del país.
-        name (CharField): Nombre del país.
-    """
-
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    name = models.CharField(
-        max_length=20
-    )
-
-
-class Department(models.Model):
-    """
-    Modelo para representar los departamentos.
-
-    Atributos:
-        id (AutoField): Identificador único del departamento.
-        name (CharField): Nombre del departamento.
-        countryId (ForeignKey): Referencia al país al que pertenece el departamento.
-    """
-
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    name = models.CharField(
-        max_length=20
-    )
-
-    countryId = models.ForeignKey(
-        Country,
-        on_delete=models.CASCADE
-    )
-
+    country_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=3)
 
 class City(models.Model):
-    """
-    Modelo para representar las ciudades.
-
-    Atributos:
-        id (AutoField): Identificador único de la ciudad.
-        name (CharField): Nombre de la ciudad.
-        dptId (ForeignKey): Referencia al departamento al que pertenece la ciudad.
-    """
-
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    name = models.CharField(
-        max_length=20
-    )
-
-    dptId = models.ForeignKey(
-        Department,
-        on_delete=models.CASCADE
-    )
+    city_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
 
 
-class Location(models.Model):
-    """
-    Modelo para representar las sedes.
-
-    Atributos:
-        id (AutoField): Identificador único de la sede.
-        name (CharField): Nombre de la sede.
-        cityId (ForeignKey): Referencia a la ciudad donde se encuentra la sede.
-    """
-
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    name = models.CharField(
-        max_length=20
-    )
-
-    cityId = models.ForeignKey(
-        City,
-        on_delete=models.CASCADE
-    )
+# Tabla para representar la entidad Operational_Shop
+class OperationalShop(models.Model):
+    operational_shop_id = models.AutoField(primary_key=True)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    address = models.TextField()
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
-class ContractType(models.Model):
-    """
-    Modelo para representar los tipos de contratación.
-
-    Atributos:
-        name (CharField): Nombre del tipo de contratación.
-    """
-
-    name = models.CharField(
-        max_length=30,
-        primary_key=True
-    )
+# Tabla para representar los horarios de las tiendas operativas
+class OperationalShopHours(models.Model):
+    operational_shop_hours_id = models.AutoField(primary_key=True)
+    operational_shop = models.ForeignKey(OperationalShop, on_delete=models.CASCADE)
+    day_of_week = models.IntegerField()
+    open_time = models.TimeField()
+    close_time = models.TimeField()
 
 
-class EmployeeType(models.Model):
-    """
-    Modelo para representar los tipos de empleado.
-
-    Atributos:
-        name (CharField): Nombre del tipo de empleado.
-    """
-
-    name = models.CharField(
-        max_length=30,
-        primary_key=True
-    )
+# Tabla para almacenar los medios de las tiendas operativas
+class OperationalShopMedia(models.Model):
+    operational_shop_media_id = models.AutoField(primary_key=True)
+    operational_shop = models.ForeignKey(OperationalShop, on_delete=models.CASCADE)
+    media_url = models.URLField()
 
 
-class Faculty(models.Model):
-    """
-    Modelo para representar las facultades.
+# Tabla para representar la entidad Product y Product_Stock
+class Category(models.Model):
+    category_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
 
-    Atributos:
-        id (AutoField): Identificador único de la facultad.
-        name (CharField): Nombre de la facultad.
-        location (CharField): Ubicación de la facultad.
-        phoneNumber (CharField): Número de teléfono de la facultad.
-        deanId (CharField): Identificador del decano de la facultad.
-    """
+class Product(models.Model):
+    product_id = models.AutoField(primary_key=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    name = models.CharField(
-        max_length=30
-    )
-
-    location = models.CharField(
-        max_length=15
-    )
-
-    phoneNumber = models.CharField(
-        max_length=15
-    )
-
-    deanId = models.CharField(
-        max_length=15
-    )
+class ProductStock(models.Model):
+    product_stock_id = models.AutoField(primary_key=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    last_updated = models.DateTimeField(auto_now=True)
 
 
-class Employee(models.Model):
-    """
-    Modelo para representar los empleados.
-
-    Atributos:
-        id (AutoField): Identificador único del empleado.
-        name (CharField): Nombre del empleado.
-        lastName (CharField): Apellido del empleado.
-        email (CharField): Correo electrónico del empleado.
-        contractType (ForeignKey): Tipo de contratación del empleado.
-        employeeType (ForeignKey): Tipo de empleado.
-        facultyId (ForeignKey): Facultad a la que pertenece el empleado.
-        locationId (ForeignKey): Ubicación del empleado.
-        birthPlace (ForeignKey): Lugar de nacimiento del empleado.
-    """
-
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    name = models.CharField(
-        max_length=30
-    )
-
-    lastName = models.CharField(
-        max_length=30
-    )
-
-    email = models.CharField(
-        max_length=40
-    )
-
-    contractType = models.ForeignKey(
-        ContractType,
-        on_delete=models.CASCADE
-    )
-
-    employeeType = models.ForeignKey(
-        EmployeeType,
-        on_delete=models.CASCADE
-    )
-
-    facultyId = models.ForeignKey(
-        Faculty,
-        on_delete=models.CASCADE
-    )
-
-    locationId = models.ForeignKey(
-        Location,
-        on_delete=models.CASCADE
-    )
-
-    birthPlace = models.ForeignKey(
-        City,
-        on_delete=models.CASCADE
-    )
+# Tabla para representar las monedas
+class Currency(models.Model):
+    currency_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=3)
+    symbol = models.CharField(max_length=3)
 
 
-class Area(models.Model):
-    """
-    Modelo para representar las áreas.
+# Tabla para representar contratos
+class Contact(models.Model):
+    contact_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=15)
+    email = models.EmailField()
+    address = models.TextField()
+    city = models.ForeignKey(City, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
-    Atributos:
-        id (AutoField): Identificador único de la área.
-        name (CharField): Nombre de la área.
-        facultyId (ForeignKey): Facultad a la que pertenece la área.
-        coordinatorId (ForeignKey): Coordinador de la área.
-    """
-
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    name = models.CharField(
-        max_length=40
-    )
-
-    facultyId = models.ForeignKey(
-        Faculty,
-        on_delete=models.CASCADE
-    )
-
-    coordinatorId = models.ForeignKey(
-        Employee,
-        on_delete=models.CASCADE
-    )
+class Contract(models.Model):
+    contract_id = models.AutoField(primary_key=True)
+    seller = models.ForeignKey(Contact, related_name='seller_contracts', on_delete=models.CASCADE)
+    buyer = models.ForeignKey(Contact, related_name='buyer_contracts', on_delete=models.CASCADE)
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
-class PROGRAMAS(models.Model):
-    """
-    Modelo para representar los programas académicos.
-
-    Atributos:
-        id (AutoField): Identificador único del programa.
-        nam (CharField): Nombre del programa.
-        areaId (ForeignKey): Área a la que pertenece el programa.
-    """
-
-    id = models.AutoField(
-        primary_key=True
-    )
-
-    nam = models.CharField(
-        max_length=40
-    )
-
-    areaId = models.ForeignKey(
-        Area,
-        on_delete=models.CASCADE
-    )
+# Tabla para representar el estado de los contratos
+class ContractStatus(models.Model):
+    contract_status_id = models.AutoField(primary_key=True)
+    contract = models.ForeignKey(Contract, on_delete=models.CASCADE)
+    status = models.CharField(max_length=50)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 """---------------------Modelos de Mongo-------------------"""
