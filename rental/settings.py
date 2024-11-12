@@ -52,10 +52,10 @@ WSGI_APPLICATION = 'rental.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('PG_DATABASE', 'postgres'),
-        'USER': os.getenv('PG_USER', 'postgres'),
-        'PASSWORD': os.getenv('PG_PASSWORD', 'postgres'),
-        'HOST': os.getenv('PG_HOST', 'database-1.cheas0yomvae.us-east-2.rds.amazonaws.com'),
+        'NAME': os.getenv('PG_DATABASE', 'postgres1_g650'),
+        'USER': os.getenv('PG_USER', 'postgres1'),
+        'PASSWORD': os.getenv('PG_PASSWORD', 'L0a5bHI6mumDNrkzsIYIUBsglTamxYdn'),
+        'HOST': os.getenv('PG_HOST', 'dpg-cspbbl3tq21c739qsa6g-a.virginia-postgres.render.com'),
         'PORT': os.getenv('PG_PORT', '5432'),
         'OPTIONS': {
             'sslmode': 'require',  # Requiere SSL
