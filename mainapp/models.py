@@ -1,256 +1,199 @@
 from django.db import models
-import mongoengine
-from mongoengine import *
+from mongoengine import Document, EmbeddedDocument, fields
 
-""""------------------------Modelos de POSTGRESQL-------------------------------------------"""
+"""------------------------ PostgreSQL Models -------------------------------------------"""
 
-# Tabla para representar la entidad Company
+class ProductService(models.Model):
+    product_service_id = models.CharField(max_length=20, primary_key=True)
+    product_service_name = models.CharField(max_length=100)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=15, decimal_places=2)
+
+class OpportunityStage(models.Model):
+    stage_id = models.CharField(max_length=20, primary_key=True)
+    stage_name = models.CharField(max_length=50)
+    description = models.TextField()
+
 class Company(models.Model):
-    company_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    nit = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=100)
+    industry = models.CharField(max_length=60)
+    address = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=50)
+    phone = models.CharField(max_length=20)
+    email = models.CharField(max_length=100)
+    country = models.CharField(max_length=60)
+    state = models.CharField(max_length=60)
+    creation_date = models.DateField()
 
-
-# Tabla para representar la entidad Shop
-class Shop(models.Model):
-    shop_id = models.AutoField(primary_key=True)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    address = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-# Tabla para representar la entidad City y Country
-class Country(models.Model):
-    country_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    code = models.CharField(max_length=3)
-
-class City(models.Model):
-    city_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-
-
-# Tabla para representar la entidad Operational_Shop
-class OperationalShop(models.Model):
-    operational_shop_id = models.AutoField(primary_key=True)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    address = models.TextField()
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-
-# Tabla para representar los horarios de las tiendas operativas
-class OperationalShopHours(models.Model):
-    operational_shop_hours_id = models.AutoField(primary_key=True)
-    operational_shop = models.ForeignKey(OperationalShop, on_delete=models.CASCADE)
-    day_of_week = models.IntegerField()
-    open_time = models.TimeField()
-    close_time = models.TimeField()
-
-
-# Tabla para almacenar los medios de las tiendas operativas
-class OperationalShopMedia(models.Model):
-    operational_shop_media_id = models.AutoField(primary_key=True)
-    operational_shop = models.ForeignKey(OperationalShop, on_delete=models.CASCADE)
-    media_url = models.URLField()
-
-
-# Tabla para representar la entidad Product y Product_Stock
-class Category(models.Model):
-    category_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-
-class Product(models.Model):
-    product_id = models.AutoField(primary_key=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-class ProductStock(models.Model):
-    product_stock_id = models.AutoField(primary_key=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    last_updated = models.DateTimeField(auto_now=True)
-
-
-# Tabla para representar las monedas
-class Currency(models.Model):
-    currency_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    code = models.CharField(max_length=3)
-    symbol = models.CharField(max_length=3)
-
-
-# Tabla para representar contratos
 class Contact(models.Model):
-    contact_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=15)
-    email = models.EmailField()
-    address = models.TextField()
-    city = models.ForeignKey(City, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    contact_id = models.CharField(max_length=20, primary_key=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    position = models.CharField(max_length=50)
+    phone = models.CharField(max_length=20)
+    email = models.CharField(max_length=100)
+    last_interaction_date = models.DateField()
+
+class Interaction(models.Model):
+    interaction_id = models.CharField(max_length=20, primary_key=True)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    interaction_date = models.DateField()
+    interaction_type = models.CharField(max_length=50)
+    notes = models.TextField()
+
+class Opportunity(models.Model):
+    opportunity_id = models.CharField(max_length=20, primary_key=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    opportunity_name = models.CharField(max_length=100)
+    description = models.TextField()
+    estimated_value = models.DecimalField(max_digits=15, decimal_places=2)
+    estimated_date = models.DateField()
+    estimated_close_date = models.DateField()
+    status = models.CharField(max_length=20)
+    success_probability = models.DecimalField(max_digits=6, decimal_places=2)
+
+class OpportunityProductService(models.Model):
+    opportunity = models.ForeignKey(Opportunity, on_delete=models.CASCADE)
+    product_service = models.ForeignKey(ProductService, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+    negotiated_price = models.DecimalField(max_digits=15, decimal_places=2)
+
+    class Meta:
+        unique_together = (('opportunity', 'product_service'),)
+
+class OpportunityStageHistory(models.Model):
+    opportunity = models.ForeignKey(Opportunity, on_delete=models.CASCADE)
+    stage = models.ForeignKey(OpportunityStage, on_delete=models.CASCADE)
+    change_date = models.DateField()
+    notes = models.TextField()
+
+    class Meta:
+        unique_together = (('opportunity', 'stage', 'change_date'),)
+
+class Department(models.Model):
+    department_id = models.CharField(max_length=20, primary_key=True)
+    department_name = models.CharField(max_length=50)
+    description = models.TextField()
+
+class ContactDepartment(models.Model):
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    assignment_date = models.DateField()
+
+    class Meta:
+        unique_together = (('contact', 'department'),)
 
 class Contract(models.Model):
-    contract_id = models.AutoField(primary_key=True)
-    seller = models.ForeignKey(Contact, related_name='seller_contracts', on_delete=models.CASCADE)
-    buyer = models.ForeignKey(Contact, related_name='buyer_contracts', on_delete=models.CASCADE)
-    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    contract_id = models.CharField(max_length=20, primary_key=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    monthly_value = models.DecimalField(max_digits=15, decimal_places=2)
 
-
-# Tabla para representar el estado de los contratos
-class ContractStatus(models.Model):
-    contract_status_id = models.AutoField(primary_key=True)
+class DeliveryCertificate(models.Model):
+    certificate_id = models.CharField(max_length=20, primary_key=True)
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE)
-    status = models.CharField(max_length=50)
-    updated_at = models.DateTimeField(auto_now=True)
+    delivery_date = models.DateField()
+    notes = models.TextField()
+
+class SQLInventoryEquipment(models.Model):  # Renamed to avoid conflict with MongoDB model
+    equipment_id = models.CharField(max_length=20, primary_key=True)
+    certificate = models.ForeignKey(DeliveryCertificate, on_delete=models.CASCADE)
+    inventory_code = models.CharField(max_length=20, unique=True)
+    equipment_name = models.CharField(max_length=255)
+    description = models.TextField()
+    status = models.BooleanField()
+    active = models.BooleanField()
+
+class SQLCategory(models.Model):  # Renamed to avoid conflict with MongoDB model
+    category_id = models.CharField(max_length=20, primary_key=True)
+    category_name = models.CharField(max_length=50)
+
+class UserAccount(models.Model):
+    user_id = models.CharField(max_length=20, primary_key=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    username = models.CharField(max_length=50, unique=True)
+    password_hash = models.CharField(max_length=255)
+    created_at = models.DateTimeField()
+    last_login = models.DateTimeField()
+
+class Role(models.Model):
+    role_id = models.CharField(max_length=20, primary_key=True)
+    role_name = models.CharField(max_length=50)
+    description = models.TextField()
+
+class UserRole(models.Model):
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('user', 'role'),)
 
 
-"""---------------------Modelos de Mongo-------------------"""
+"""--------------------- MongoDB Models -------------------------------------------"""
+
+class MongoCategory(Document):
+    category_id = fields.StringField(required=True, unique=True, max_length=20)
+    category_name = fields.StringField(required=True, max_length=50)
+    description = fields.StringField()  # Additional details for the category
+
+    meta = {'collection': 'categories'}
 
 
-# class User(Document):
-#     """
-#     Modelo para representar los usuarios
-
-#     Atributos:
-#         username (CharField): Nombre de usuario.
-#         fullName (CharField): Nombre descriptivo del usuario.
-#         relationship (CharField): relación del usuario.
-#         email (CharField): correo electronico del usuario.
-#         city (CharField): ciudad del usuario.
-#     """
-
-#     username = StringField(
-#         max_length=120
-#     )
-
-#     fullName = StringField(
-#         max_length=240
-#     )
-
-#     relationship = StringField(
-#         max_length=120
-#     )
-
-#     email = EmailField(
-#         max_length=120
-#     )
-
-#     city_id = StringField(
-
-#     )
-
-#     def get_city(self):
-#         city = City.objects.get(id=self.city_id)
-#         return city
+class EquipmentSpecifications(EmbeddedDocument):
+    spec_key = fields.StringField(required=True)  # Specification name, e.g., "RAM"
+    spec_value = fields.StringField(required=True)  # Specification value, e.g., "16GB"
 
 
-# class Comment(Document):
-#     """
-#     Modelo para representar los comentarios.
+class MongoEquipment(Document):
+    equipment_id = fields.StringField(required=True, unique=True, max_length=20)
+    category = fields.ReferenceField(MongoCategory, required=True)  # Relationship with category
+    name = fields.StringField(required=True, max_length=100)
+    brand = fields.StringField(max_length=50)
+    model = fields.StringField(max_length=50)
+    description = fields.StringField()  # General description
+    price = fields.DecimalField(required=True, precision=2)
+    stock_quantity = fields.IntField(required=True)
+    warranty_period = fields.StringField()  # Warranty period
+    release_date = fields.DateField()  # Release date
+    active = fields.BooleanField(default=True)
+    specifications = fields.EmbeddedDocumentListField(EquipmentSpecifications)  # List of specifications
+    image_url = fields.URLField()  # Image URL
 
-#     Atributos:
-#         text (CharField): Texto del comentario.
-#         userId (IntegerField): Identificador del usuario al cual pertenece el comentario.
-#     """
-#     text = StringField(
-#         required=True
-#     )
-
-#     userId = ReferenceField(
-#         User,
-#         reverse_delete_rule=mongoengine.CASCADE
-#     )
-
-
-# class Category(Document):
-#     """
-#     Modelo para representar las categorías.
-
-#     Atributos:
-#         name (StringField): Nombre de la categoría.
-#     """
-#     name = StringField(
-#         max_length=120
-#     )
+    meta = {'collection': 'equipments'}
 
 
-# class Faculty(Document):
-#     """
-#     Modelo para representar las facultades.
+class RentalRequest(Document):
+    request_id = fields.StringField(required=True, unique=True, max_length=20)
+    user_id = fields.StringField(required=True, max_length=20)  # ID of the customer making the request
+    equipment = fields.ReferenceField(MongoEquipment, required=True)  # Requested equipment
+    request_date = fields.DateTimeField(required=True)
+    status = fields.StringField(choices=['pending', 'approved', 'rejected'], default='pending')  # Request status
 
-#     Atributos:
-#         name (CharField): Nombre descriptivo de la facultad.
-#     """
-#     name = StringField(max_length=255)
-
-
-# class Event(Document):
-#     """
-#     Modelo para representar los eventos
-
-#     Atributos:
-#         title (CharField): titulo descriptivo del evento.
-#         description (CharField): descripción del evento.
-#         categories (CharField): categorias del evento.
-#         date (CharField): fecha de realización del evento.
-#         location (CharField): ubicación del evento.
-#     """
-#     title = StringField(
-#         max_length=255
-#     )
-
-#     description = StringField(
-#         max_length=512
-#     )
-
-#     categories = ListField(ReferenceField
-#                            (Category,
-#                             reverse_delete_rule=NULLIFY)
-#                            )
-
-#     date = DateTimeField(
-
-#     )
-
-#     location_id = StringField()
-
-#     def get_location(self):
-#         # Realiza una consulta a la base de datos de Oracle para obtener la ubicación
-#         location = Location.objects.get(id=self.location_id)
-#         return location
+    meta = {'collection': 'rental_requests'}
 
 
-# class Program(Document):
-#     """
-#     Modelo para representar los programas académicos.
+class ActiveRental(Document):
+    rental_id = fields.StringField(required=True, unique=True, max_length=20)
+    contract_id = fields.StringField(required=True, max_length=20)  # Contract ID
+    equipment = fields.ReferenceField(MongoEquipment, required=True)  # Rented equipment
+    start_date = fields.DateField(required=True)
+    end_date = fields.DateField()
 
-#     Atributos:
-#         name (CharField): Nombre descriptivo del programa.
-#         facultyId (IntegerField): Identificador único de la facultad a la que pertenece.
-#     """
-#     name = StringField(
-#         max_length=255
-#     )
+    meta = {'collection': 'active_rentals'}
 
-#     facultyId = ReferenceField(
-#         Faculty,
-#         reverse_delete_rule=mongoengine.CASCADE
-#     )
+
+class MongoContract(Document):
+    contract_id = fields.StringField(required=True, unique=True, max_length=20)
+    customer_id = fields.StringField(required=True, max_length=20)  # Customer ID in CRM
+    start_date = fields.DateField(required=True)
+    end_date = fields.DateField()
+    monthly_value = fields.DecimalField(required=True, precision=2)
+    delivery_certificates = fields.ListField(fields.StringField())  # Related delivery certificate IDs
+    active_rentals = fields.ListField(fields.ReferenceField(ActiveRental))  # Related active rentals
+
+    meta = {'collection': 'contracts'}
