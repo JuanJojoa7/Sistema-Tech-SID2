@@ -1,23 +1,23 @@
+<!-- home.html -->
+{% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
-    <link rel="stylesheet" href="static/CSS/homeStyles.css">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'css/HomeSignLog.css' %}">
 </head>
 <body>
-
-    <div class="img-fondo">
-        <img class="fontImage" src="https://www.icesi.edu.co/facultad-ciencias-administrativas-economicas/images/posgrado/doctorado-economia-negocios/banner-doctorado-en-ciencias-administrativas.jpg" alt="ImagenDeFondo">
-
-        <div class = "texto_general"> <p>SISTEMA GESTOR DE EVENTOS</p>  </div>
-        <!-- Ejemplo de botones con enlaces -->
-        <div class="general_panel">
-            <a href="eventos/" class="programs_btn">EVENTOS</a>
-            <a href="crear_usuario/" class="programs_btn">REGISTRAR ASISTENTE</a>
-            <a href="crear_evento/" class="programs_btn">REGISTRAR EVENTOS</a>
-            <a href="lugar_evento/" class="teacher_btn">LUGAR EVENTO</a>
+    <div class="container">
+        <h1>Welcome to the Platform</h1>
+        <div>
+            <form action="{% url 'login' %}" method="get">
+                <button type="submit">Login</button>
+            </form>
+            <form action="{% url 'register' %}" method="get">
+                <button type="submit">Register</button>
+            </form>
         </div>
     </div>
 </body>
