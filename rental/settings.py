@@ -5,6 +5,10 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# La carpeta donde Django guardará los archivos subidos (media)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 SECRET_KEY = 'django-insecure-34ue7ruie6lmq^j)@vpo15o)lhk23awwubco)d#e&r1nzx=tnn'
 DEBUG = True
 ALLOWED_HOSTS = []
