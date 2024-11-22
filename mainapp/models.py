@@ -138,7 +138,7 @@ class Equipment(models.Model):
     available_quantity = models.IntegerField(default=0)
     contract = models.ForeignKey(Contract, null=True, blank=True, on_delete=models.SET_NULL)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
-    image = models.ImageField(upload_to='equipment_images/', null=True, blank=True)
+    image = models.ImageField(upload_to='equipment_images', null=True, blank=True)
 
     def __str__(self):
         return self.description
