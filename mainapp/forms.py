@@ -18,7 +18,7 @@ class UserAccountCreationForm(forms.ModelForm):
             user.save()
 
         # Asignar el rol automáticamente como R2 (cliente)
-        role = Role.objects.get(role_id='R2')  # Asegúrate de que el rol 'R2' existe en la base de datos
+        role = Role.objects.get(role_id='R002')  # Asegúrate de que el rol 'R2' existe en la base de datos
         UserRole.objects.create(user=user, role=role)
 
         return user

@@ -113,8 +113,10 @@ class Contract(models.Model):
     end_date = models.DateField()
     monthly_value = models.DecimalField(max_digits=10, decimal_places=2)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)  # Asociar con el cliente que solicitó el contrato
-    status = models.CharField(max_length=20, choices=[('active', 'Active'), ('inactive', 'Inactive')], default='active')
+    users = models.ManyToManyField(UserAccount, related_name='contracts')  # Relación muchos a muchos
+
+    def __str__(self):
+        return f"Contrato {self.contract_number}"
 
 class Category(models.Model):
     category_id = models.CharField(max_length=20, primary_key=True)
@@ -124,54 +126,30 @@ class Category(models.Model):
 class DeliveryCertificate(models.Model):
     certificate_id = models.CharField(max_length=20, primary_key=True)
     contract = models.ForeignKey(Contract, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     delivery_date = models.DateField()
     notes = models.TextField(blank=True, null=True)
 
 class Equipment(models.Model):
     equipment_id = models.CharField(max_length=20, primary_key=True)
-    certificate = models.ForeignKey(DeliveryCertificate, on_delete=models.CASCADE)
     inventory_code = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
+    available_quantity = models.IntegerField(default=0)
+    contract = models.ForeignKey(Contract, null=True, blank=True, on_delete=models.SET_NULL)
     category = models.ForeignKey(Category, null=True, blank=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to='equipment_images/', null=True, blank=True)
-    available_quantity = models.IntegerField(default=0)  # Para gestionar el stock disponible
-    contract = models.ForeignKey(Contract, null=True, blank=True, on_delete=models.SET_NULL)  # Relación directa con contrato
+
+    def __str__(self):
+        return self.description
 
     # Campos específicos dependiendo del tipo de equipo
-    processor = models.CharField(max_length=100, blank=True, null=True)  # Para computadoras
-    ram = models.CharField(max_length=50, blank=True, null=True)  # Para computadoras
-    storage = models.CharField(max_length=50, blank=True, null=True)  # Para computadoras
-    screen_size = models.FloatField(blank=True, null=True)  # Para celulares/tablets
-    battery_life = models.FloatField(blank=True, null=True)  # Para celulares/tablets
-    resolution = models.CharField(max_length=100, blank=True, null=True)  # Para cámaras de celulares
-
-class RentalRequest(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
-    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    requested_on = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')], default='pending')
-
-# Nueva tabla para el historial de las solicitudes de alquiler
-class RentalRequestHistory(models.Model):
-    rental_request = models.ForeignKey(RentalRequest, on_delete=models.CASCADE)
-    status = models.CharField(max_length=20, choices=[('pending', 'Pending'), ('approved', 'Approved'), ('rejected', 'Rejected')])
-    change_date = models.DateTimeField(auto_now_add=True)
-    notes = models.TextField(blank=True, null=True)
-
-    class Meta:
-        unique_together = ('rental_request', 'change_date')
-
-# Nueva tabla para controlar los movimientos de inventario de equipos
-class InventoryMovement(models.Model):
-    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
-    movement_type = models.CharField(max_length=20, choices=[('in', 'In'), ('out', 'Out')])
-    quantity = models.IntegerField()
-    movement_date = models.DateTimeField(auto_now_add=True)
-    notes = models.TextField(blank=True, null=True)
-
-    class Meta:
-        unique_together = ('equipment', 'movement_date')
+    processor = models.CharField(max_length=100, blank=True, null=True)
+    ram = models.CharField(max_length=50, blank=True, null=True)
+    storage = models.CharField(max_length=50, blank=True, null=True)
+    screen_size = models.FloatField(blank=True, null=True)
+    battery_life = models.FloatField(blank=True, null=True)
+    resolution = models.CharField(max_length=100, blank=True, null=True)
 
 
 """---------------------Modelos de Mongo-------------------"""

@@ -10,14 +10,14 @@ def dashboard(request):
         # Obtén el usuario logueado
         user = UserAccount.objects.get(user_id=user_id)
 
-        # Obtén los contratos asociados al usuario logueado
-        contracts = Contract.objects.filter(user_id=user_id)
+        # Obtén los contratos asociados al usuario logueado usando la relación many-to-many (users)
+        contracts = Contract.objects.filter(users=user)
 
         # Obtén los certificados de entrega relacionados a esos contratos
         delivery_certificates = DeliveryCertificate.objects.filter(contract__in=contracts)
 
-        # Obtén los equipos activos relacionados a esos certificados
-        active_equipments = Equipment.objects.filter(certificate__in=delivery_certificates, active=True)
+        # Obtén los equipos activos relacionados a esos contratos y certificados de entrega
+        active_equipments = Equipment.objects.filter(contract__in=contracts, active=True)
 
         context = {
             'user': user,  # Pasa el usuario al contexto

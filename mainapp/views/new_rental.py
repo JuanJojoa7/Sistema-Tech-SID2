@@ -10,13 +10,13 @@ def new_rental(request):
     try:
         user = UserAccount.objects.get(user_id=user_id)
 
-        # Obtener contratos disponibles (no asignados al usuario)
-        contracts = Contract.objects.filter(status='active').exclude(user=user)
+        # Obtener contratos activos (usando 'status' en lugar de 'active')
+        contracts = Contract.objects.exclude(users=user)
 
         # Para cada contrato, buscar los equipos asociados
         contracts_with_equipments = []
         for contract in contracts:
-            equipments = Equipment.objects.filter(contract=contract, active=True)
+            equipments = Equipment.objects.filter(contract=contract)  # No necesitas el 'active' aquí
             contracts_with_equipments.append({
                 'contract': contract,
                 'equipments': equipments,
@@ -37,9 +37,9 @@ def request_contract(request, contract_id):
 
     try:
         # Asociar el contrato al usuario logueado
-        contract = Contract.objects.get(contract_number=contract_id, status='active')
+        contract = Contract.objects.get(contract_number=contract_id)
         user = UserAccount.objects.get(user_id=user_id)
-        contract.user = user
+        contract.users.add(user)  # Usamos 'add' en lugar de asignar directamente
         contract.save()
 
         messages.success(request, f"El contrato {contract_id} ha sido asignado exitosamente.")
