@@ -9,7 +9,13 @@
 </head>
 <body>
     <header class="header">
-        <h1>Welcome, {{ user.username }}</h1> <!-- Muestra el nombre del usuario logueado -->
+        <div class="header-content">
+            <h1>Welcome, {{ user.username }}</h1> <!-- Muestra el nombre del usuario logueado -->
+            <div class="header-buttons">
+                <a href="{% url 'new_rental' %}" class="btn btn-primary">Request New Rental</a>
+                <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+            </div>
+        </div>
     </header>
 
     <main class="dashboard">
@@ -44,7 +50,7 @@
 
         <!-- Equipos Activos -->
         <section class="equipments">
-            <h2>Your Rented Equipments</h2>
+            <h2>Your Rented Equipment</h2>
             {% if equipments %}
                 <div class="equipment-grid">
                     {% for equipment in equipments %}
@@ -58,11 +64,6 @@
             {% else %}
                 <p>No active equipment found.</p>
             {% endif %}
-        </section>
-
-        <!-- Botón para nueva solicitud -->
-        <section class="new-rental">
-            <a href="{% url 'new_rental' %}" class="btn">Request New Rental</a>
         </section>
     </main>
 </body>

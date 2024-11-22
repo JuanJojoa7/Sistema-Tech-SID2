@@ -1,12 +1,45 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuevo Alquiler</title>
+    <title>Catálogo de Contratos</title>
+    <link rel="stylesheet" href="{% static 'css/new_rental.css' %}">
 </head>
 <body>
-    <h1>Registrar Nuevo Alquiler</h1>
-    <p>Aquí podrás solicitar un nuevo alquiler.</p>
+    <header>
+        <h1>Catálogo de Contratos</h1>
+        <a href="{% url 'dashboard' %}" class="btn">Volver al Dashboard</a>
+    </header>
+    <main>
+        <h1>Selecciona un Contrato</h1>
+        <p>Elige un contrato disponible para alquilar los equipos asociados.</p>
+
+        <div class="contracts-container">
+            {% for item in contracts_with_equipments %}
+            <div class="contract-card">
+                <h2>Contrato N° {{ item.contract.contract_number }}</h2>
+                <p><strong>Fecha de inicio:</strong> {{ item.contract.start_date }}</p>
+                <p><strong>Fecha de finalización:</strong> {{ item.contract.end_date }}</p>
+                <p><strong>Valor mensual:</strong> ${{ item.contract.monthly_value }}</p>
+
+                <h3>Equipos Asociados:</h3>
+                <ul>
+                    {% for equipment in item.equipments %}
+                    <li>
+                        <strong>Código:</strong> {{ equipment.inventory_code }} - {{ equipment.description }}
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <form method="POST" action="{% url 'request_contract' item.contract.contract_number %}">
+                    {% csrf_token %}
+                    <button class="btn-request-contract">Solicitar Contrato</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
 </body>
 </html>
