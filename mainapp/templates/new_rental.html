@@ -28,6 +28,7 @@
                 <ul>
                     {% for equipment in item.equipments %}
                     <li>
+                        <img src="{{ equipment.image.url }}" alt="Equipment Image" class="equipment-image">
                         <strong>Code:</strong> {{ equipment.inventory_code }} - {{ equipment.description }}
                     </li>
                     {% endfor %}
@@ -37,6 +38,9 @@
                     {% csrf_token %}
                     <button class="btn-request-contract">Request Contract</button>
                 </form>
+
+                <!-- Enlace para mostrar detalles del contrato y sus equipos -->
+                <a href="{% url 'equipment_details' item.contract.contract_number %}" class="btn-more-details">More Details</a>
             </div>
             {% endfor %}
         </div>

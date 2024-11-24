@@ -10,13 +10,13 @@ def new_rental(request):
     try:
         user = UserAccount.objects.get(user_id=user_id)
 
-        # Obtener contratos activos (usando 'status' en lugar de 'active')
+        # Obtener contratos que no están asignados al usuario
         contracts = Contract.objects.exclude(users=user)
 
         # Para cada contrato, buscar los equipos asociados
         contracts_with_equipments = []
         for contract in contracts:
-            equipments = Equipment.objects.filter(contract=contract)  # No necesitas el 'active' aquí
+            equipments = Equipment.objects.filter(contract=contract)
             contracts_with_equipments.append({
                 'contract': contract,
                 'equipments': equipments,
@@ -42,11 +42,11 @@ def request_contract(request, contract_id):
         contract.users.add(user)  # Usamos 'add' en lugar de asignar directamente
         contract.save()
 
-        messages.success(request, f"El contrato {contract_id} ha sido asignado exitosamente.")
+        messages.success(request, f"Contract {contract_id} has been successfully assigned.")
         return redirect('dashboard')  # Redirigir al dashboard
 
     except Contract.DoesNotExist:
-        messages.error(request, "El contrato seleccionado no está disponible.")
+        messages.error(request, "The selected contract is not available.")
         return redirect('new_rental')
 
     except UserAccount.DoesNotExist:

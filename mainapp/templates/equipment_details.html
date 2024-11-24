@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Details</title>
+    <link rel="stylesheet" href="{% static 'css/equipment_details.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Contract Details</h1>
+        <a href="{% url 'new_rental' %}" class="btn">Back to Contract List</a>
+    </header>
+    <main>
+        <h2>Contract No. {{ contract.contract_number }}</h2>
+        <p><strong>Start Date:</strong> {{ contract.start_date }}</p>
+        <p><strong>End Date:</strong> {{ contract.end_date }}</p>
+        <p><strong>Monthly Value:</strong> ${{ contract.monthly_value }}</p>
+
+        <h3>Associated Equipment:</h3>
+        <ul>
+            {% for equipment in equipments %}
+            <li class="equipment-details">
+                <img src="{{ equipment.image.url }}" alt="Equipment Image" class="equipment-image">
+                <div class="equipment-info">
+                    <span><strong>Code:</strong> {{ equipment.inventory_code }}</span>
+                    <span><strong>Description:</strong> {{ equipment.description }}</span>
+                    <span><strong>Processor:</strong> {{ equipment.processor }}</span>
+                    <span><strong>RAM:</strong> {{ equipment.ram }}</span>
+                    <span><strong>Storage:</strong> {{ equipment.storage }}</span>
+                    <span><strong>Screen Size:</strong> {{ equipment.screen_size }} inches</span>
+                    <span><strong>Battery Life:</strong> {{ equipment.battery_life }} hours</span>
+                    <span><strong>Resolution:</strong> {{ equipment.resolution }}</span>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>
