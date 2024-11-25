@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.db.models import Q
+from django.shortcuts import redirect, render
 from django.contrib import messages
-from mainapp.models import Contract, Equipment, UserAccount
+from mainapp.models import Contract, Equipment, UserAccount, Category
 
 def new_rental(request):
     user_id = request.session.get('user_id')  # Obtener el usuario logueado
@@ -10,8 +11,24 @@ def new_rental(request):
     try:
         user = UserAccount.objects.get(user_id=user_id)
 
-        # Obtener contratos que no están asignados al usuario
+        # Obtener categorías para el filtro
+        categories = Category.objects.all()
+
+        # Filtros de categoría y búsqueda
+        selected_category = request.GET.get('category', None)
+        search_query = request.GET.get('search', '')
+
         contracts = Contract.objects.exclude(users=user)
+        if selected_category:
+            contracts = contracts.filter(
+                equipment__category__category_id=selected_category
+            ).distinct()
+
+        if search_query:
+            contracts = contracts.filter(
+                Q(equipment__description__icontains=search_query) |
+                Q(equipment__inventory_code__icontains=search_query)
+            ).distinct()
 
         # Para cada contrato, buscar los equipos asociados
         contracts_with_equipments = []
@@ -24,6 +41,9 @@ def new_rental(request):
 
         context = {
             'contracts_with_equipments': contracts_with_equipments,
+            'categories': categories,
+            'selected_category': selected_category,
+            'search_query': search_query,
         }
         return render(request, 'new_rental.html', context)
 

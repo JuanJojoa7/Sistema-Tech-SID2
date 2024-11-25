@@ -16,6 +16,19 @@
         <h1>Select a Contract</h1>
         <p>Choose an available contract to rent the associated equipment.</p>
 
+        <form method="GET" action="" class="filter-form">
+            <select name="category" class="category-select">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category.category_id }}" {% if category.category_id == selected_category %}selected{% endif %}>
+                    {{ category.category_name }}
+                </option>
+                {% endfor %}
+            </select>
+            <input type="text" name="search" value="{{ search_query }}" placeholder="Search equipment..." class="search-bar">
+            <button type="submit" class="btn-filter">Filter</button>
+        </form>
+
         <div class="contracts-container">
             {% for item in contracts_with_equipments %}
             <div class="contract-card">
@@ -38,8 +51,6 @@
                     {% csrf_token %}
                     <button class="btn-request-contract">Request Contract</button>
                 </form>
-
-                <!-- Enlace para mostrar detalles del contrato y sus equipos -->
                 <a href="{% url 'equipment_details' item.contract.contract_number %}" class="btn-more-details">More Details</a>
             </div>
             {% endfor %}

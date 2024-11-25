@@ -159,3 +159,34 @@ main p {
         width: 90%; /* Ajuste para pantallas pequeñas */
     }
 }
+
+/* Filtro de Categorías y Barra de Búsqueda */
+.filter-form {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px;
+}
+
+.category-select,
+.search-bar {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.btn-filter {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-filter:hover {
+    background-color: #45a049;
+}
+
