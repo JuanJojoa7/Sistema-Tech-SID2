@@ -6,6 +6,13 @@ from .models import (
     UserAccount, UserRole, Contract, Category, 
     DeliveryCertificate, Equipment
 )
+from .forms import EquipmentForm
+
+class EquipmentAdmin(admin.ModelAdmin):
+    form = EquipmentForm
+    change_form_template = 'admin/equipment/change_form.html'
+
+admin.site.register(Equipment, EquipmentAdmin)
 
 # Registramos los modelos en el admin
 @admin.register(Company)
@@ -80,8 +87,8 @@ class CategoryAdmin(admin.ModelAdmin):
 class DeliveryCertificateAdmin(admin.ModelAdmin):
     list_display = ('certificate_id', 'contract', 'user', 'delivery_date')
 
-@admin.register(Equipment)
-class EquipmentAdmin(admin.ModelAdmin):
-    list_display = ('equipment_id', 'inventory_code', 'description', 'active', 'available_quantity', 'category')
-    search_fields = ('inventory_code', 'description')
-    list_filter = ('active', 'category')
+# @admin.register(Equipment)
+# class EquipmentAdmin(admin.ModelAdmin):
+#     list_display = ('equipment_id', 'inventory_code', 'description', 'active', 'available_quantity', 'category')
+#     search_fields = ('inventory_code', 'description')
+#     list_filter = ('active', 'category')

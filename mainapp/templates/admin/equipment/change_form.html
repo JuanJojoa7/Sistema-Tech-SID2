@@ -1,0 +1,56 @@
+<!-- templates/admin/equipment/change_form.html -->
+{% extends "admin/change_form.html" %}
+{% block extrahead %}
+{{ block.super }}
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryField = document.getElementById('id_category');
+        const laptopDesktopFields = document.querySelectorAll('.laptop-desktop-field');
+        const printerFields = document.querySelectorAll('.printer-field');
+        const tabletPhoneFields = document.querySelectorAll('.tablet-phone-field');
+        const projectorFields = document.querySelectorAll('.projector-field');
+
+        function toggleFields() {
+            console.log('Category changed');
+            const selectedOption = categoryField.options[categoryField.selectedIndex];
+            const category = selectedOption.textContent.trim().toLowerCase();
+            // const category = categoryField.options[categoryField.selectedIndex].text.toLowerCase();
+            console.log('Selected category:', category);
+
+            laptopDesktopFields.forEach(field => {
+                console.log('Hiding laptop-desktop-field');
+                field.closest('.form-row').style.display = 'none';
+            });
+            printerFields.forEach(field => {
+                console.log('Hiding printer-field');
+                field.closest('.form-row').style.display = 'none';
+            });
+            tabletPhoneFields.forEach(field => {
+                console.log('Hiding tablet-phone-field');
+                field.closest('.form-row').style.display = 'none';
+            });
+            projectorFields.forEach(field => {
+                console.log('Hiding projector-field');
+                field.closest('.form-row').style.display = 'none';
+            });
+
+            if (category === 'category object (cat001)' || category === 'category object (cat004)') {
+                console.log('Showing laptop-desktop-fields');
+                laptopDesktopFields.forEach(field => field.closest('.form-row').style.display = '');
+            } else if (category === 'category object (cat003)') {
+                console.log('Showing printer-fields');
+                printerFields.forEach(field => field.closest('.form-row').style.display = '');
+            } else if (category === 'category object (cat005)' || category === 'category object (cat006)') {
+                console.log('Showing tablet-phone-fields');
+                tabletPhoneFields.forEach(field => field.closest('.form-row').style.display = '');
+            } else if (category === 'category object (cat002)') {
+                console.log('Showing projector-fields');
+                projectorFields.forEach(field => field.closest('.form-row').style.display = '');
+            }
+        }
+
+        categoryField.addEventListener('change', toggleFields);
+        toggleFields();  // Initial call to set the correct fields on page load
+    });
+</script>
+{% endblock %}
