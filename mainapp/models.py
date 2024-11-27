@@ -1,6 +1,8 @@
 from django.db import models
 import mongoengine
 from mongoengine import *
+from mongoengine import Document, EmbeddedDocument, StringField, FloatField, EmbeddedDocumentField, ListField
+
 
 # ------------------------Modelos de POSTGRESQL-------------------------------------------
 
@@ -132,6 +134,7 @@ class DeliveryCertificate(models.Model):
 
 class Equipment(models.Model):
     equipment_id = models.CharField(max_length=20, primary_key=True)
+    mongo_document_id = models.CharField(max_length=50, blank=True, null=True)
     inventory_code = models.CharField(max_length=50, unique=True)
     description = models.CharField(max_length=255)
     active = models.BooleanField(default=True)
@@ -143,144 +146,102 @@ class Equipment(models.Model):
     def __str__(self):
         return self.description
 
-    # Campos específicos dependiendo del tipo de equipo
-    processor = models.CharField(max_length=100, blank=True, null=True)
-    ram = models.CharField(max_length=50, blank=True, null=True)
-    storage = models.CharField(max_length=50, blank=True, null=True)
-    screen_size = models.FloatField(blank=True, null=True)
-    battery_life = models.FloatField(blank=True, null=True)
-    resolution = models.CharField(max_length=100, blank=True, null=True)
+    # # Campos específicos dependiendo del tipo de equipo
+    # processor = models.CharField(max_length=100, blank=True, null=True)
+    # ram = models.CharField(max_length=50, blank=True, null=True)
+    # storage = models.CharField(max_length=50, blank=True, null=True)
+    # screen_size = models.FloatField(blank=True, null=True)
+    # battery_life = models.FloatField(blank=True, null=True)
+    # resolution = models.CharField(max_length=100, blank=True, null=True)
 
 
 """---------------------Modelos de Mongo-------------------"""
 
+# Embedded document for Laptop and Desktop specifications
+class LaptopAndDesktopSpecs(EmbeddedDocument):
+    processor = StringField()
+    ram = StringField()
+    storage_type = StringField()
+    storage_capacity = StringField()
+    graphics_card = StringField()
+    operating_system = StringField()
 
-# class User(Document):
-#     """
-#     Modelo para representar los usuarios
+# Embedded document for Printer specifications
+class PrinterSpecs(EmbeddedDocument):
+    print_technology = StringField()
+    connectivity = ListField(StringField())
 
-#     Atributos:
-#         username (CharField): Nombre de usuario.
-#         fullName (CharField): Nombre descriptivo del usuario.
-#         relationship (CharField): relación del usuario.
-#         email (CharField): correo electronico del usuario.
-#         city (CharField): ciudad del usuario.
-#     """
+# Embedded document for Tablet and Phone specifications
+class TabletAndPhoneSpecs(EmbeddedDocument):
+    screen_size = FloatField()
+    battery_life = FloatField()
+    camera_resolution = StringField()
+    operating_system = StringField()
 
-#     username = StringField(
-#         max_length=120
-#     )
+class ProjectorSpecs(EmbeddedDocument):
+    resolution = StringField()
+    brightness = StringField()
+    technology = StringField()
+    lamp_life = StringField()
+    aspect_ratio = StringField()
 
-#     fullName = StringField(
-#         max_length=240
-#     )
+class MongoEquipment(Document):
+    """
+    Modelo para representar los equipos
 
-#     relationship = StringField(
-#         max_length=120
-#     )
+    Atributos:
+        id (ObjectIdField): Identificador único del equipo.
+        equipment_id (StringField): Identificador del equipo.
+        category (StringField): Categoría del equipo.
+        laptop_and_desktop_specs (EmbeddedDocumentField): Especificaciones de laptop y desktop.
+        printer_specs (EmbeddedDocumentField): Especificaciones de impresora.
+        tablet_and_phone_specs (EmbeddedDocumentField): Especificaciones de tablet y teléfono.
+    """
 
-#     email = EmailField(
-#         max_length=120
-#     )
+    equipment_id = StringField(
+        max_length=20
+    )
 
-#     city_id = StringField(
+    category = StringField(required=True, choices=[
+        "Laptop", "Desktop", "Printer", "Tablet", "Phone", "Monitor", 
+        "Firewall", "NAS", "Router", "All in One", "CPU", "Switch", 
+        "UPS", "Workstation", "Capturadora", "POS", "Projector"
+    ])
 
-#     )
+     # Embedded specifications
+    laptop_and_desktop_specs = EmbeddedDocumentField(LaptopAndDesktopSpecs, null=True)
 
-#     def get_city(self):
-#         city = City.objects.get(id=self.city_id)
-#         return city
+    printer_specs = EmbeddedDocumentField(PrinterSpecs, null=True)
 
+    tablet_and_phone_specs = EmbeddedDocumentField(TabletAndPhoneSpecs, null=True)
 
-# class Comment(Document):
-#     """
-#     Modelo para representar los comentarios.
+    projector_specs = EmbeddedDocumentField(ProjectorSpecs, null=True)
 
-#     Atributos:
-#         text (CharField): Texto del comentario.
-#         userId (IntegerField): Identificador del usuario al cual pertenece el comentario.
-#     """
-#     text = StringField(
-#         required=True
-#     )
-
-#     userId = ReferenceField(
-#         User,
-#         reverse_delete_rule=mongoengine.CASCADE
-#     )
-
-
-# class Category(Document):
-#     """
-#     Modelo para representar las categorías.
-
-#     Atributos:
-#         name (StringField): Nombre de la categoría.
-#     """
-#     name = StringField(
-#         max_length=120
-#     )
-
-
-# class Faculty(Document):
-#     """
-#     Modelo para representar las facultades.
-
-#     Atributos:
-#         name (CharField): Nombre descriptivo de la facultad.
-#     """
-#     name = StringField(max_length=255)
-
-
-# class Event(Document):
-#     """
-#     Modelo para representar los eventos
-
-#     Atributos:
-#         title (CharField): titulo descriptivo del evento.
-#         description (CharField): descripción del evento.
-#         categories (CharField): categorias del evento.
-#         date (CharField): fecha de realización del evento.
-#         location (CharField): ubicación del evento.
-#     """
-#     title = StringField(
-#         max_length=255
-#     )
-
-#     description = StringField(
-#         max_length=512
-#     )
-
-#     categories = ListField(ReferenceField
-#                            (Category,
-#                             reverse_delete_rule=NULLIFY)
-#                            )
-
-#     date = DateTimeField(
-
-#     )
-
-#     location_id = StringField()
-
-#     def get_location(self):
-#         # Realiza una consulta a la base de datos de Oracle para obtener la ubicación
-#         location = Location.objects.get(id=self.location_id)
-#         return location
+    def clean(self):
+        """Ensure only relevant EmbeddedDocumentField is populated."""
+        if self.category in ["Laptop", "Desktop"]:
+            self.printer_specs = None
+            self.tablet_and_phone_specs = None
+        elif self.category == "Printer":
+            self.laptop_and_desktop_specs = None
+            self.tablet_and_phone_specs = None
+        elif self.category in ["Tablet", "Phone"]:
+            self.laptop_and_desktop_specs = None
+            self.printer_specs = None
+        elif self.category == "Projector":
+            self.laptop_and_desktop_specs = None
+            self.printer_specs = None
+            self.tablet_and_phone_specs = None
+        else:
+            # Clear all specs for other categories
+            self.laptop_and_desktop_specs = None
+            self.printer_specs = None
+            self.tablet_and_phone_specs = None
+            self.projector_specs = None
+    
+    def __str__(self):
+        return f"{self.name} ({self.category})"
+    
 
 
-# class Program(Document):
-#     """
-#     Modelo para representar los programas académicos.
 
-#     Atributos:
-#         name (CharField): Nombre descriptivo del programa.
-#         facultyId (IntegerField): Identificador único de la facultad a la que pertenece.
-#     """
-#     name = StringField(
-#         max_length=255
-#     )
-
-#     facultyId = ReferenceField(
-#         Faculty,
-#         reverse_delete_rule=mongoengine.CASCADE
-#     )
