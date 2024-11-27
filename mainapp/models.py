@@ -157,7 +157,7 @@ class Equipment(models.Model):
 
 """---------------------Modelos de Mongo-------------------"""
 
-# Embedded document for Laptop and Desktop specifications
+# Embedded document para Laptop y Desktop
 class LaptopAndDesktopSpecs(EmbeddedDocument):
     processor = StringField()
     ram = StringField()
@@ -166,12 +166,12 @@ class LaptopAndDesktopSpecs(EmbeddedDocument):
     graphics_card = StringField()
     operating_system = StringField()
 
-# Embedded document for Printer specifications
+# Embedded document para Printer
 class PrinterSpecs(EmbeddedDocument):
     print_technology = StringField()
     connectivity = ListField(StringField())
 
-# Embedded document for Tablet and Phone specifications
+# Embedded document para Tablet y Phone
 class TabletAndPhoneSpecs(EmbeddedDocument):
     screen_size = FloatField()
     battery_life = FloatField()
@@ -208,7 +208,7 @@ class MongoEquipment(Document):
         "UPS", "Workstation", "Capturadora", "POS", "Projector"
     ])
 
-     # Embedded specifications
+  
     laptop_and_desktop_specs = EmbeddedDocumentField(LaptopAndDesktopSpecs, null=True)
 
     printer_specs = EmbeddedDocumentField(PrinterSpecs, null=True)
@@ -233,7 +233,6 @@ class MongoEquipment(Document):
             self.printer_specs = None
             self.tablet_and_phone_specs = None
         else:
-            # Clear all specs for other categories
             self.laptop_and_desktop_specs = None
             self.printer_specs = None
             self.tablet_and_phone_specs = None

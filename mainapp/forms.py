@@ -31,7 +31,7 @@ class EquipmentForm(forms.ModelForm):
     class Meta:
         model = Equipment
         fields = '__all__'
-        exclude = ['mongo_document_id']  # Exclude mongo_document_id from the form
+        exclude = ['mongo_document_id']  # Excluir el campo 'mongo_document_id' del formulario
 
     processor = forms.CharField(required=False)
     ram = forms.CharField(required=False)
@@ -101,15 +101,12 @@ class EquipmentForm(forms.ModelForm):
         equipment = super().save(commit=False)
         categorytemp = Category.objects.get(category_id=equipment.category.category_id)
 
-        # Check if a connection already exists
+        # Revisar si existe una conexión existente
         try:
-            # Attempt to get the current connection
             conn = connection.get_connection()
         except:
-            # If no connection exists, use the global connection from settings
             print("No existing connection. Using global MongoDB connection.")
 
-        # Normalize category name
         normalized_category = categorytemp.category_name
         if normalized_category == 'Laptops':
             normalized_category = 'Laptop'
@@ -120,14 +117,12 @@ class EquipmentForm(forms.ModelForm):
         elif normalized_category == 'Tablets':
             normalized_category = 'Tablet'
 
-        # Check if an existing MongoDB document exists
+        # Revisar si existe un documento en MongoDB
         try:
             mongo_equipment = MongoEquipment.objects.get(equipment_id=equipment.equipment_id)
         except MongoEquipment.DoesNotExist:
             mongo_equipment = MongoEquipment(equipment_id=equipment.equipment_id, category=normalized_category)
 
-        # Debug: Print all cleaned_data to see what's being passed
-        print("Cleaned Data:", self.cleaned_data)
 
         try:
             if normalized_category in ["Laptop", "Desktop"]:
@@ -166,7 +161,7 @@ class EquipmentForm(forms.ModelForm):
             except Exception as e:
                 print(f"Error saving MongoDB document: {e}")
 
-            # Update PostgreSQL model with MongoDB document ID
+            # Actualizar el campo 'mongo_document_id' en el modelo Equipment
             equipment.mongo_document_id = str(mongo_equipment.id)
             equipment.save()
 
