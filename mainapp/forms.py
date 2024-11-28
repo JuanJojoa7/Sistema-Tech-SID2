@@ -72,100 +72,114 @@ class EquipmentForm(forms.ModelForm):
         if self.instance and self.instance.mongo_document_id:
             try:
                 mongo_equipment = MongoEquipment.objects.get(id=self.instance.mongo_document_id)
-                if mongo_equipment.laptop_and_desktop_specs:
-                    self.fields['processor'].initial = mongo_equipment.laptop_and_desktop_specs.processor
-                    self.fields['ram'].initial = mongo_equipment.laptop_and_desktop_specs.ram
-                    self.fields['storage_type'].initial = mongo_equipment.laptop_and_desktop_specs.storage_type
-                    self.fields['storage_capacity'].initial = mongo_equipment.laptop_and_desktop_specs.storage_capacity
-                    self.fields['graphics_card'].initial = mongo_equipment.laptop_and_desktop_specs.graphics_card
-                    self.fields['operating_system'].initial = mongo_equipment.laptop_and_desktop_specs.operating_system
-                if mongo_equipment.printer_specs:
-                    self.fields['print_technology'].initial = mongo_equipment.printer_specs.print_technology
-                    self.fields['conectivity'].initial = mongo_equipment.printer_specs.conectivity
-                if mongo_equipment.tablet_and_phone_specs:
-                    self.fields['screen_size'].initial = mongo_equipment.tablet_and_phone_specs.screen_size
-                    self.fields['battery_life'].initial = mongo_equipment.tablet_and_phone_specs.battery_life
-                    self.fields['camera_resolution'].initial = mongo_equipment.tablet_and_phone_specs.camera_resolution
-                    self.fields['operating_system'].initial = mongo_equipment.tablet_and_phone_specs.operating_system
-                if mongo_equipment.projector_specs:
-                    self.fields['resolution'].initial = mongo_equipment.projector_specs.resolution
-                    self.fields['brightness'].initial = mongo_equipment.projector_specs.brightness
-                    self.fields['technology'].initial = mongo_equipment.projector_specs.technology
-                    self.fields['lamp_life'].initial = mongo_equipment.projector_specs.lamp_life
-                    self.fields['aspect_ratio'].initial = mongo_equipment.projector_specs.aspect_ratio
-            except MongoEquipment.DoesNotExist:
-                pass
+                
+                
+                if mongo_equipment.category in ["Laptop", "Desktop"] and mongo_equipment.laptop_and_desktop_specs:
+                    specs = mongo_equipment.laptop_and_desktop_specs
+                    self.fields['processor'].initial = specs.processor
+                    self.fields['ram'].initial = specs.ram
+                    self.fields['storage_type'].initial = specs.storage_type
+                    self.fields['storage_capacity'].initial = specs.storage_capacity
+                    self.fields['graphics_card'].initial = specs.graphics_card
+                    self.fields['operating_system'].initial = specs.operating_system
+                
+                elif mongo_equipment.category == "Printer" and mongo_equipment.printer_specs:
+                    specs = mongo_equipment.printer_specs
+                    self.fields['print_technology'].initial = specs.print_technology
+                    self.fields['conectivity'].initial = specs.connectivity
+                
+                elif mongo_equipment.category in ["Tablet", "Phone"] and mongo_equipment.tablet_and_phone_specs:
+                    specs = mongo_equipment.tablet_and_phone_specs
+                    self.fields['screen_size'].initial = specs.screen_size
+                    self.fields['battery_life'].initial = specs.battery_life
+                    self.fields['camera_resolution'].initial = specs.camera_resolution
+                
+                elif mongo_equipment.category == "Projector" and mongo_equipment.projector_specs:
+                    specs = mongo_equipment.projector_specs
+                    self.fields['resolution'].initial = specs.resolution
+                    self.fields['brightness'].initial = specs.brightness
+                    self.fields['technology'].initial = specs.technology
+                    self.fields['lamp_life'].initial = specs.lamp_life
+                    self.fields['aspect_ratio'].initial = specs.aspect_ratio
+
+            except MongoEquipment.DoesNotExist as e:
+                print(f"Error retrieving MongoDB document: {e}")
 
 
     def save(self, commit=True):
         equipment = super().save(commit=False)
         categorytemp = Category.objects.get(category_id=equipment.category.category_id)
 
-        # Revisar si existe una conexión existente
-        try:
-            conn = connection.get_connection()
-        except:
-            print("No existing connection. Using global MongoDB connection.")
-
+        
         normalized_category = categorytemp.category_name
-        if normalized_category == 'Laptops':
-            normalized_category = 'Laptop'
-        elif normalized_category == 'Desktops':
-            normalized_category = 'Desktop'
-        elif normalized_category == 'Phones':
-            normalized_category = 'Phone'
-        elif normalized_category == 'Tablets':
-            normalized_category = 'Tablet'
-
-        # Revisar si existe un documento en MongoDB
-        try:
-            mongo_equipment = MongoEquipment.objects.get(equipment_id=equipment.equipment_id)
-        except MongoEquipment.DoesNotExist:
-            mongo_equipment = MongoEquipment(equipment_id=equipment.equipment_id, category=normalized_category)
-
+        category_mapping = {
+            'Laptops': 'Laptop',
+            'Desktops': 'Desktop',
+            'Phones': 'Phone',
+            'Tablets': 'Tablet',
+            'Projectors': 'Projector',
+            'Printers': 'Printer'
+        }
+        normalized_category = category_mapping.get(normalized_category, normalized_category)
 
         try:
+            
+            try:
+                mongo_equipment = MongoEquipment.objects.get(equipment_id=equipment.equipment_id)
+            except MongoEquipment.DoesNotExist:
+                mongo_equipment = MongoEquipment(
+                    equipment_id=equipment.equipment_id, 
+                    category=normalized_category
+                )
+
+            # Populate specs based on category
             if normalized_category in ["Laptop", "Desktop"]:
                 mongo_equipment.laptop_and_desktop_specs = LaptopAndDesktopSpecs(
-                    processor=self.cleaned_data['processor'],
-                    ram=self.cleaned_data['ram'],
-                    storage_type=self.cleaned_data['storage_type'],
-                    storage_capacity=self.cleaned_data['storage_capacity'],
-                    graphics_card=self.cleaned_data['graphics_card'],
-                    operating_system=self.cleaned_data['operating_system']
+                    processor=self.cleaned_data.get('processor', ''),
+                    ram=self.cleaned_data.get('ram', ''),
+                    storage_type=self.cleaned_data.get('storage_type', ''),
+                    storage_capacity=self.cleaned_data.get('storage_capacity', ''),
+                    graphics_card=self.cleaned_data.get('graphics_card', ''),
+                    operating_system=self.cleaned_data.get('operating_system', '')
                 )
             elif normalized_category == "Printer":
                 mongo_equipment.printer_specs = PrinterSpecs(
-                    print_technology=self.cleaned_data['print_technology'],
-                    conectivity=self.cleaned_data['conectivity']
+                    print_technology=self.cleaned_data.get('print_technology', ''),
+                    connectivity=self.cleaned_data.get('conectivity', '')
                 )
             elif normalized_category in ["Tablet", "Phone"]:
                 mongo_equipment.tablet_and_phone_specs = TabletAndPhoneSpecs(
-                    screen_size=self.cleaned_data['screen_size'],
-                    battery_life=self.cleaned_data['battery_life'],
-                    camera_resolution=self.cleaned_data['camera_resolution'],
-                    operating_system=self.cleaned_data['operating_system']
+                    screen_size=float(self.cleaned_data.get('screen_size', 0)),
+                    battery_life=float(self.cleaned_data.get('battery_life', 0)),
+                    camera_resolution=self.cleaned_data.get('camera_resolution', ''),
                 )
             elif normalized_category == "Projector":
                 mongo_equipment.projector_specs = ProjectorSpecs(
-                    resolution=self.cleaned_data['resolution'],
-                    brightness=self.cleaned_data['brightness'],
-                    technology=self.cleaned_data['technology'],
-                    lamp_life=self.cleaned_data['lamp_life'],
-                    aspect_ratio=self.cleaned_data['aspect_ratio']
+                    resolution=self.cleaned_data.get('resolution', ''),
+                    brightness=self.cleaned_data.get('brightness', ''),
+                    technology=self.cleaned_data.get('technology', ''),
+                    lamp_life=self.cleaned_data.get('lamp_life', ''),
+                    aspect_ratio=self.cleaned_data.get('aspect_ratio', '')
                 )
-            
+
+
             try:
                 mongo_equipment.save()
-                print("MongoDB document saved successfully.")
-            except Exception as e:
-                print(f"Error saving MongoDB document: {e}")
+                print(f"MongoDB document saved successfully for {normalized_category}")
+                
+                if mongo_equipment.id:
+                    equipment.mongo_document_id = str(mongo_equipment.id)
+                else:
+                    print(f"Warning: No MongoDB ID for {normalized_category}")
 
-            # Actualizar el campo 'mongo_document_id' en el modelo Equipment
-            equipment.mongo_document_id = str(mongo_equipment.id)
-            equipment.save()
+            except Exception as save_error:
+                print(f"Error saving MongoDB document for {normalized_category}: {save_error}")
+                
+            if commit:
+                equipment.save()
 
             return equipment
 
         except Exception as e:
-            print(f"Error saving MongoDB document: {e}")
+            print(f"Unexpected error in equipment save: {e}")
+            raise

@@ -169,14 +169,13 @@ class LaptopAndDesktopSpecs(EmbeddedDocument):
 # Embedded document para Printer
 class PrinterSpecs(EmbeddedDocument):
     print_technology = StringField()
-    connectivity = ListField(StringField())
+    connectivity = StringField()
 
 # Embedded document para Tablet y Phone
 class TabletAndPhoneSpecs(EmbeddedDocument):
     screen_size = FloatField()
     battery_life = FloatField()
     camera_resolution = StringField()
-    operating_system = StringField()
 
 class ProjectorSpecs(EmbeddedDocument):
     resolution = StringField()
@@ -222,12 +221,15 @@ class MongoEquipment(Document):
         if self.category in ["Laptop", "Desktop"]:
             self.printer_specs = None
             self.tablet_and_phone_specs = None
+            self.projector_specs = None
         elif self.category == "Printer":
             self.laptop_and_desktop_specs = None
             self.tablet_and_phone_specs = None
+            self.projector_specs = None
         elif self.category in ["Tablet", "Phone"]:
             self.laptop_and_desktop_specs = None
             self.printer_specs = None
+            self.projector_specs = None
         elif self.category == "Projector":
             self.laptop_and_desktop_specs = None
             self.printer_specs = None
