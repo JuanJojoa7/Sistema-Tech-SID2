@@ -1,0 +1,162 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+.header {
+    background-color: #0056b3;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.dashboard {
+    padding: 20px;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #0056b3;
+    color: white;
+}
+
+.equipment-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.equipment-card {
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: calc(33.33% - 20px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.new-rental .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: white;
+    background-color: #0056b3;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.new-rental .btn:hover {
+    background-color: #003f7f;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.header-buttons .btn {
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    color: white;
+}
+
+.header-buttons .btn-primary {
+    background-color: #007BFF; /* Azul */
+}
+
+.header-buttons .btn-secondary {
+    background-color: #DC3545; /* Rojo */
+}
+
+.header-buttons .btn:hover {
+    opacity: 0.9;
+}
+
+/* General layout for the equipment grid */
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Columnas ajustadas al contenido */
+    gap: 15px; /* Menor separación entre tarjetas */
+    padding: 10px;
+    justify-content: center; /* Centra el contenido */
+}
+
+/* Card style */
+.equipment-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: auto;
+    width: 250px; /* Tamaño fijo más proporcional */
+    margin: auto;
+}
+
+/* Image styling */
+.equipment-image {
+    width: 100%;
+    height: 180px; /* Imagen más grande y visible */
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+/* Text styling */
+.equipment-info p {
+    margin: 5px 0;
+    word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+    font-size: 14px;
+    color: #333;
+    text-align: left; /* Alineación para mayor legibilidad */
+}
+
+.equipment-info p strong {
+    font-weight: bold;
+}
+
+/* Adjustments for better layout */
+.equipment-card p:last-child {
+    margin-bottom: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .equipment-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Reduce las columnas en pantallas pequeñas */
+    }
+    .equipment-card {
+        width: 200px; /* Ajuste más pequeño para móviles */
+    }
+}
