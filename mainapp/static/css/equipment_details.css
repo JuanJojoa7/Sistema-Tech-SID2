@@ -1,0 +1,106 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+/* Header Styles */
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+header .btn {
+    background-color: white;
+    color: #4CAF50;
+    padding: 8px 15px;
+    text-decoration: none;
+    border: 1px solid #4CAF50;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+header .btn:hover {
+    background-color: #45a049;
+    color: white;
+}
+
+/* Main Content Styles */
+main {
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+main h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+main p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Equipment Image Styles */
+.equipment-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centrar el contenido */
+    margin-bottom: 15px;
+}
+
+.equipment-image {
+    width: 100%;          /* Hacer que la imagen ocupe el 100% del contenedor */
+    max-width: 300px;     /* Limitar el tamaño máximo */
+    height: auto;         /* Mantener la proporción de la imagen */
+    margin: 10px 0;
+    border-radius: 8px;
+    object-fit: contain;  /* Asegurarnos de que la imagen se ajuste bien dentro de su contenedor */
+}
+
+.equipment-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    text-align: left;
+}
+
+.equipment-details li {
+    font-size: 14px;
+    color: #555;
+    margin: 8px 0;
+}
+
+/* Alineación de imagen y texto (si es necesario) */
+.equipment-details .equipment-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-left: 20px;
+}
+
+.equipment-details .equipment-info strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.equipment-details .equipment-info span {
+    margin-bottom: 5px;
+}

@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Welcome, {{ user.username }}</h1> <!-- Muestra el nombre del usuario logueado -->
+            <div class="header-buttons">
+                <a href="{% url 'new_rental' %}" class="btn btn-primary">Request New Rental</a>
+                <a href="{% url 'logout' %}" class="btn btn-secondary">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <!-- Contratos -->
+        <section class="contracts">
+            <h2>Your Contracts</h2>
+            {% if contracts %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Contract Number</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Monthly Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for contract in contracts %}
+                        <tr>
+                            <td>{{ contract.contract_number }}</td>
+                            <td>{{ contract.start_date }}</td>
+                            <td>{{ contract.end_date }}</td>
+                            <td>{{ contract.monthly_value }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No contracts found.</p>
+            {% endif %}
+        </section>
+
+        <!-- Equipos Activos -->
+        <section class="equipments">
+            <h2>Your Rented Equipment</h2>
+            {% if equipments %}
+                <div class="equipment-grid">
+                    {% for equipment in equipments %}
+                    <div class="equipment-card">
+                        <img src="{{ equipment.image.url }}" alt="{{ equipment.description }}" class="equipment-image">
+                        <div class="equipment-info">
+                            <p><strong>Code:</strong> {{ equipment.inventory_code }}</p>
+                            <p><strong>Description:</strong> {{ equipment.description }}</p>
+                            <p><strong>Category:</strong> {{ equipment.category.category_name }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No active equipment found.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

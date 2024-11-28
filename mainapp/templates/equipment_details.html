@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Details</title>
+    <link rel="stylesheet" href="{% static 'css/equipment_details.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Contract Details</h1>
+        <a href="{% url 'new_rental' %}" class="btn">Back to Contract List</a>
+    </header>
+    <main>
+        <h2>Contract No. {{ contract.contract_number }}</h2>
+        <p><strong>Start Date:</strong> {{ contract.start_date }}</p>
+        <p><strong>End Date:</strong> {{ contract.end_date }}</p>
+        <p><strong>Monthly Value:</strong> ${{ contract.monthly_value }}</p>
+
+        <h3>Associated Equipment:</h3>
+        <ul>
+            {% for item in associated_equipments %}
+            <li class="equipment-info">
+                <!-- Datos de SQL -->
+                <img src="{{ item.sql_equipment.image.url }}" alt="Equipment Image" class="equipment-image">
+                <div class="equipment-info">
+                    <span><strong>Code:</strong> {{ item.sql_equipment.inventory_code }}</span>
+                    <span><strong>Description:</strong> {{ item.sql_equipment.description }}</span>
+                </div>
+
+                <!-- Datos de MongoDB -->
+                {% if item.mongo_detail %}
+                <div class="equipment-details">
+                    <span><strong>Category:</strong> {{ item.mongo_detail.category }}</span>
+                    {% if item.mongo_detail.category == "Laptop" or item.mongo_detail.category == "Desktop" %}
+                        <span><strong>Processor:</strong> {{ item.mongo_detail.laptop_and_desktop_specs.processor }}</span>
+                        <span><strong>RAM:</strong> {{ item.mongo_detail.laptop_and_desktop_specs.ram }}</span>
+                        <span><strong>Storage Type:</strong> {{ item.mongo_detail.laptop_and_desktop_specs.storage_type }}</span>
+                        <span><strong>Storage Capacity:</strong> {{ item.mongo_detail.laptop_and_desktop_specs.storage_capacity }}</span>
+                        <span><strong>Graphics Card:</strong> {{ item.mongo_detail.laptop_and_desktop_specs.graphics_card }}</span>
+                        <span><strong>Operating System:</strong> {{ item.mongo_detail.laptop_and_desktop_specs.operating_system }}</span>
+                    {% elif item.mongo_detail.category == "Projector" %}
+                        <span><strong>Resolution:</strong> {{ item.mongo_detail.projector_specs.resolution }}</span>
+                        <span><strong>Brightness:</strong> {{ item.mongo_detail.projector_specs.brightness }}</span>
+                        <span><strong>Technology:</strong> {{ item.mongo_detail.projector_specs.technology }}</span>
+                        <span><strong>Lamp Life:</strong> {{ item.mongo_detail.projector_specs.lamp_life }}</span>
+                        <span><strong>Aspect Ratio:</strong> {{ item.mongo_detail.projector_specs.aspect_ratio }}</span>
+                    {% elif item.category == "Printer" %}
+                        <span><strong>Print Speed:</strong> {{ item.mongo_detail.printer_specs.print_speed }}</span>
+                        <span><strong>Connectivity:</strong> {{ item.mongo_detail.printer_specs.connectivity }}</span>
+                    {% elif item.category == "Tablet" or equipment.category == "Phone" %}
+                        <span><strong>Screen Size:</strong> {{ item.tablet_and_phone_specs.screen_size }}</span>
+                        <span><strong>Battery Life:</strong> {{ item.tablet_and_phone_specs.battery_life }}</span>
+                        <span><strong>Camera Resolution:</strong> {{ item.tablet_and_phone_specs.camera_resolution }}</span>
+                        <span><strong>Operating System:</strong> {{ item.tablet_and_phone_specs.operating_system }}</span>
+                    {% endif %}
+                </div>
+                {% else %}
+                <p>No additional details available for this equipment.</p>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

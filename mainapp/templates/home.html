@@ -1,0 +1,24 @@
+<!-- home.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{% static 'css/HomeSignLog.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to TechRent Solutions</h1>
+        <div>
+            <form action="{% url 'login' %}" method="get">
+                <button type="submit">Login</button>
+            </form>
+            <form action="{% url 'register' %}" method="get">
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
